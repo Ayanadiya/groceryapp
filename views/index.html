@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+</head>
+<body>
+    <div>
+        <form onsubmit="addItem(event)">
+            <label for="item">Item Name</label>
+            <input type="text" id="item" required>
+            <label for="description">Description</label>
+            <input type="text" id="description" required>
+            <label for="price">Price</label>
+            <input type="number" id="price" required>
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" required>
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
+    <hr>
+    <div>
+        <h1>List of Items</h1>
+        <ul class="listofitems"></ul>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
