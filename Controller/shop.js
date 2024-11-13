@@ -29,15 +29,20 @@ exports.buyProducts=((req,res, next) => {
     const number=req.params.itemquantity;
     Products.findByPk(id)
     .then(product => {
+        if(!product)
+        {
+            return res.status(404).json({ message: "Product not found" });
+        }
         if(number<=product.quantity)
         {
             product.quantity=product.quantity-number;
-            product.save()
-            res.send("Product selled")
+            product.save().then(updatedproduct =>{
+                res.json(updatedproduct);
+            })
         }
         else
         {
-            res.send({message:"Product not available"})
+            res.status(400).json({ message: "Requested quantity exceeds available stock" });
         }
     })
     .catch(err => console.log(err));

@@ -11,7 +11,10 @@ window.addEventListener('DOMContentLoaded', () => {
             addtolist(product);
         });
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+        console.log(err);
+        alert(err);
+    })
 })
 
 function addItem(event) {
@@ -38,34 +41,63 @@ const listofitems=document.getElementById('listofitems');
         alert("Item added");
         addtolist(product);
 })
-    .catch(err => console.log(err));
+    .catch(err => {
+        console.log(err);
+        alert(err);
+    });
 }
 
 function addtolist(product) {
 const listofitems=document.getElementById('listofitems');
     const listitem=document.createElement('li');
-    listitem.textContent=`${product.item}-${product.description}-${product.price}-${product.quantity}`
+    listitem.textContent=`${product.title}-${product.description}-${product.price}Rs-${product.quantity}Nos`
     const buyOnebtn=document.createElement('button')
     buyOnebtn.textContent='BuyOne'
-    buyOnebtn.onclick = () => buy(product.id, 1);
+    buyOnebtn.onclick = () => buy(listitem,product.id, 1);
     const buyTwobtn=document.createElement('button')
     buyTwobtn.textContent='BuyTwo'
-    buyTwobtn.onclick = () => buy(product.id, 2);
+    buyTwobtn.onclick = () => buy(listitem,product.id, 2);
     const buyThreebtn=document.createElement('button')
     buyThreebtn.textContent='BuyThree'
-    buyThreebtn.onclick = () => buy(product.id, 3);
+    buyThreebtn.onclick = () => buy(listitem,product.id, 3);
     listitem.appendChild(buyOnebtn);
     listitem.appendChild(buyTwobtn);
     listitem.appendChild(buyThreebtn);
     listofitems.appendChild(listitem);
 }
 
-function buy(productId, itemquantity)
+function buy(listitem,productId, itemquantity)
 { 
     axios.get(`http://127.0.0.1:3000/buy/${productId}/${itemquantity}`)
-    .then(res => {
-        console.log(res);
-        location.reload();
+    .then(res => {        
+        const updatedproduct=res.data;
+        updatelist(listitem, updatedproduct);
+        alert("Product bought Successfully");
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+        if(err.response.status===400)
+        {
+            alert("Requested quantity is not available");
+        }
+        else{
+            alert(err);
+        }
+    })
+}
+
+function updatelist(listitem,updatedproduct) {
+    listitem.innerHTML='';
+    listitem.textContent=`${updatedproduct.title}-${updatedproduct.description}-${updatedproduct.price}Rs-${updatedproduct.quantity}Nos`
+    const buyOnebtn=document.createElement('button')
+    buyOnebtn.textContent='BuyOne'
+    buyOnebtn.onclick = () => buy(listitem,updatedproduct.id, 1);
+    const buyTwobtn=document.createElement('button')
+    buyTwobtn.textContent='BuyTwo'
+    buyTwobtn.onclick = () => buy(listitem,updatedproduct.id, 2);
+    const buyThreebtn=document.createElement('button')
+    buyThreebtn.textContent='BuyThree'
+    buyThreebtn.onclick = () => buy(listitem,updatedproduct.id, 3);
+    listitem.appendChild(buyOnebtn);
+    listitem.appendChild(buyTwobtn);
+    listitem.appendChild(buyThreebtn);
 }
